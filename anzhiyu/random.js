@@ -1,1 +1,1 @@
-var posts=["2023/05/09/HTML面试知识点/","2023/05/09/CSS面试知识点/","2023/05/09/Vue面试知识点/","2023/05/09/JS面试知识点/","2023/05/09/dp动态规划/","2023/05/09/test/","2023/05/09/计算机网络面试知识点/","2023/05/09/字节面经/"];function toRandomPost(){pjax.loadUrl('/'+posts[Math.floor(Math.random() * posts.length)]);};
+var posts=["2023/05/09/CSS面试知识点/","2023/05/09/HTML面试知识点/","2023/05/09/JS面试知识点/","2023/05/09/Vue面试知识点/","2023/05/09/dp动态规划/","2023/05/09/test/","2023/05/09/字节面经/","2023/05/09/计算机网络面试知识点/"];function toRandomPost(){pjax.loadUrl('/'+posts[Math.floor(Math.random() * posts.length)]);};

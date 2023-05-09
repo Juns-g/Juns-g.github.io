@@ -5821,6 +5821,19 @@ h1.page-title + .tag-cloud-list {
   -ms-transform: rotate(10deg) translateY(-10%) scale(2);
   transform: rotate(10deg) translateY(-10%) scale(2);
   filter: blur(10px);
+  -webkit-transform: none;
+  -moz-transform: none;
+  -o-transform: none;
+  -ms-transform: none;
+  transform: none;
+  margin: auto;
+  width: auto;
+}
+#page-header.post-bg #post-top-cover::after {
+  display: none;
+}
+#page-header.post-bg #post-top-cover img {
+  border-radius: 0;
 }
 @media screen and (max-width: 768px) {
   #page-header.post-bg #post-top-cover {
