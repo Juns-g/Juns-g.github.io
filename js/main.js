@@ -2,6 +2,8 @@
 var anzhiyu_musicFirst = false;
 // 音乐播放状态
 var anzhiyu_musicPlaying = false;
+// 是否开启快捷键
+var anzhiyu_keyboard = false
 
 var adjectives = [
   "美丽的",
@@ -799,8 +801,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   //监听蒙版关闭
-  const bodyWrap = document.getElementById("content-inner");
-  bodyWrap.addEventListener(
+  document.addEventListener(
     "touchstart",
     e => {
       anzhiyu.removeRewardMask();

@@ -239,7 +239,7 @@ hr:before,
 .error404 #error-wrap .error-content,
 #recent-posts > .recent-post-item,
 #aside-content .card-widget,
-.layout > .recent-posts .pagination > *:not(.space) {
+.layout > .recent-posts .pagination > *:not(.space):not(pangu) {
   border-radius: 8px;
   background: var(--card-bg);
   -webkit-box-shadow: var(--card-box-shadow);
@@ -2783,6 +2783,19 @@ figure.highlight pre .javascript .function {
   flex-direction: column;
   min-height: 100vh;
 }
+@media screen and (max-width: 768px) {
+  #body-wrap .layout {
+    padding: 0;
+  }
+  #body-wrap #category,
+  #body-wrap #tag {
+    padding: 40px 15px 20px;
+    background: var(--anzhiyu-background);
+  }
+  #body-wrap #archive {
+    background: var(--anzhiyu-background);
+  }
+}
 .layout {
   display: -webkit-box;
   display: -moz-box;
@@ -2814,7 +2827,7 @@ figure.highlight pre .javascript .function {
 }
 @media screen and (max-width: 768px) {
   .layout {
-    padding: 0;
+    padding: 20px 15px;
     z-index: 3;
   }
 }
@@ -3392,7 +3405,7 @@ body[data-type="link"] #page .page-title {
   position: absolute;
   top: 15px;
   left: 11px;
-  z-index: 2;
+  z-index: 1;
   max-width: 100%;
   display: -webkit-box;
   display: -moz-box;
@@ -4124,6 +4137,220 @@ body:has(#console.show) #nav-music {
     top: -90px;
   }
 }
+.reward #con {
+  width: 350px;
+  height: 85px;
+  position: relative;
+  border-radius: 4px;
+}
+.reward #TA-con {
+  width: 157px;
+  height: 50px;
+  background-color: #f25d8e;
+  -webkit-box-shadow: 0 4px 4px rgba(255,112,159,0.3);
+  box-shadow: 0 4px 4px rgba(255,112,159,0.3);
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  border-radius: 4px;
+  cursor: pointer;
+}
+@media screen and (max-width: 768px) {
+  .reward #TA-con {
+    width: 125px;
+    left: 54px;
+  }
+}
+.reward #TA-con:hover {
+  background-color: #ff6b9a;
+}
+.reward #text-con {
+  width: 100px;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+.reward #linght {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 36%;
+  left: 4px;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 10px;
+  border-top: 10px solid #fff;
+  border-radius: 4px;
+  -webkit-transform: rotate(-55deg);
+  -moz-transform: rotate(-55deg);
+  -o-transform: rotate(-55deg);
+  -ms-transform: rotate(-55deg);
+  transform: rotate(-55deg);
+}
+.reward #linght::after {
+  position: absolute;
+  top: -13px;
+  left: -11px;
+  content: "";
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 10px;
+  border-top: 10px solid #fff;
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+  border-radius: 4px;
+}
+.reward #TA {
+  float: right;
+  line-height: 50px;
+  font-size: 15px;
+  color: #fff;
+}
+.reward #tube-con {
+  width: 157px;
+  height: 55px;
+  position: absolute;
+  right: -5px;
+  top: 15px;
+}
+.reward svg {
+  width: 100%;
+  height: 100%;
+}
+.reward #mask {
+  width: 0px;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.reward #mask svg {
+  width: 157px;
+  height: 55px;
+}
+.reward #TA-con:hover + #tube-con > #mask {
+  width: 157px;
+}
+.reward #TA-con:hover + #tube-con > #orange-mask {
+  -webkit-animation: move1 0.5s linear 0.2s infinite;
+  -moz-animation: move1 0.5s linear 0.2s infinite;
+  -o-animation: move1 0.5s linear 0.2s infinite;
+  -ms-animation: move1 0.5s linear 0.2s infinite;
+  animation: move1 0.5s linear 0.2s infinite;
+}
+.reward #TA-con:hover + #tube-con > #orange-mask svg {
+  -webkit-animation: movetwo 0.5s linear 0.2s infinite;
+  -moz-animation: movetwo 0.5s linear 0.2s infinite;
+  -o-animation: movetwo 0.5s linear 0.2s infinite;
+  -ms-animation: movetwo 0.5s linear 0.2s infinite;
+  animation: movetwo 0.5s linear 0.2s infinite;
+}
+.reward #orange-mask {
+  width: 18px;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  left: -15px;
+  top: 0px;
+}
+.reward #orange-mask svg {
+  position: absolute;
+  top: 0;
+  left: 15px;
+  width: 157px;
+  height: 55px;
+}
+.reward #people {
+  position: absolute;
+  right: 10px;
+  top: 4px;
+  font-size: 12px;
+  font-family: "雅黑";
+  color: #aaa;
+}
+.reward #people > b {
+  color: #777;
+}
+@-moz-keyframes move1 {
+  0% {
+    left: -15px;
+  }
+  100% {
+    left: 140px;
+  }
+}
+@-webkit-keyframes move1 {
+  0% {
+    left: -15px;
+  }
+  100% {
+    left: 140px;
+  }
+}
+@-o-keyframes move1 {
+  0% {
+    left: -15px;
+  }
+  100% {
+    left: 140px;
+  }
+}
+@keyframes move1 {
+  0% {
+    left: -15px;
+  }
+  100% {
+    left: 140px;
+  }
+}
+@-moz-keyframes movetwo {
+  0% {
+    left: 15px;
+  }
+  100% {
+    left: -140px;
+  }
+}
+@-webkit-keyframes movetwo {
+  0% {
+    left: 15px;
+  }
+  100% {
+    left: -140px;
+  }
+}
+@-o-keyframes movetwo {
+  0% {
+    left: 15px;
+  }
+  100% {
+    left: -140px;
+  }
+}
+@keyframes movetwo {
+  0% {
+    left: 15px;
+  }
+  100% {
+    left: -140px;
+  }
+}
 .tag-cloud-list a {
   display: inline-block;
   padding: 0 8px;
@@ -4542,6 +4769,7 @@ h1.page-title + .tag-cloud-list {
 }
 #aside-content .card-widget .author-info__description {
   margin-top: -0.42em;
+  color: var(--anzhiyu-fontcolor);
 }
 #aside-content .card-widget .banner-button-group .banner-button {
   padding: 20px 12px;
@@ -5133,6 +5361,66 @@ h1.page-title + .tag-cloud-list {
   background: var(--anzhiyu-white);
   color: var(--anzhiyu-black);
 }
+.card-widget .author-info-top {
+  margin: 15px auto 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+@media screen and (max-width: 768px) {
+  .card-widget .author-info-top {
+    display: none;
+  }
+}
+.card-widget .card-info-avatar {
+  display: inline-block;
+  position: relative;
+}
+.card-widget.card-info .banner-button-group {
+  margin: 5px 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+#aside-content .card-info .banner-button {
+  height: 40px;
+  width: 100%;
+  border-radius: 20px;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.card-widget.card-info .banner-button-group .banner-button-text {
+  margin-right: 5px;
+}
+.card-info-avatar .avatar-img {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+[data-theme="dark"] #aside-content > .card-info {
+  background: var(--anzhiyu-card-bg);
+}
+@media screen and (max-width: 992px) {
+  #aside-content > .card-info {
+    background-size: 100% 70%;
+  }
+}
 @-moz-keyframes more-btn-move {
   0%, 100% {
     -webkit-transform: translateX(0);
@@ -5644,7 +5932,6 @@ h1.page-title + .tag-cloud-list {
 }
 #footer-wrap #anzhiyu-footer .footer-group .footer-title-group a {
   margin-left: 8px;
-  margin-top: 4px;
   line-height: 32px;
 }
 #footer-wrap #anzhiyu-footer .footer-group .footer-title-group i {
@@ -5664,6 +5951,7 @@ h1.page-title + .tag-cloud-list {
   color: var(--anzhiyu-secondtext);
   font-size: 1rem;
   text-align: left;
+  font-weight: 600;
 }
 #footer-wrap #anzhiyu-footer .footer-links {
   display: -webkit-box;
@@ -7042,13 +7330,13 @@ h1.page-title + .tag-cloud-list {
     margin-right: 0;
   }
 }
-.layout > .recent-posts .pagination > * {
+.layout > .recent-posts .pagination > *:not(pangu) {
   display: inline-block;
   width: 2.5em;
   height: 2.5em;
   line-height: 2.5em;
 }
-.layout > .recent-posts .pagination > *:not(.space) {
+.layout > .recent-posts .pagination > *:not(.space):not(pangu) {
   -webkit-transition: 0s;
   -moz-transition: 0s;
   -o-transition: 0s;
@@ -13319,10 +13607,7 @@ html.hide-aside .layout > div:first-child {
   background-color: #121121;
   border: var(--style-border);
 }
-#aside-content .card-widget {
-  border-radius: 12px;
-  transition: 0.3s;
-}
+
 #flip-wrapper {
   -webkit-perspective: 1000;
   perspective: 1000;
@@ -13622,43 +13907,6 @@ li.card-archive-list-item {
   content: none;
 }
 
-.card-widget .author-info-top {
-  margin: 15px auto 0;
-  display: flex;
-  justify-content: center;
-}
-.card-widget .card-info-avatar {
-  display: inline-block;
-  position: relative;
-}
-.card-widget.card-info .banner-button-group {
-  margin: 5px 0;
-  display: flex;
-}
-#aside-content .card-info .banner-button {
-  height: 40px;
-  width: 100%;
-  border-radius: 20px;
-  justify-content: center;
-}
-.card-widget.card-info .banner-button-group .banner-button-text {
-  margin-right: 5px;
-}
-.card-info-avatar .avatar-img {
-  width: 100px;
-  height: 100px;
-  display: block;
-}
-
-[data-theme="dark"] #aside-content > .card-info {
-  background: var(--anzhiyu-card-bg);
-}
-@media screen and (max-width: 992px) {
-  #aside-content > .card-info {
-    background-size: 100% 70%;
-  }
-}
-
 /* 分类目录条、标签目录条 */
 #catalog-bar {
   border-radius: var(--anzhiyu-border-radius);
@@ -13714,6 +13962,7 @@ a.catalog-more {
   min-width: fit-content;
   font-weight: bold;
   color: var(--anzhiyu-fontcolor);
+  margin-left: 16px;
 }
 
 a.catalog-more:hover {
@@ -13738,6 +13987,17 @@ a.catalog-more:hover {
   transition: all 0.3s ease 0s;
   animation: slide-in 0.6s 0.3s backwards;
 }
+
+.category-bar-next {
+  margin-left: 16px;
+  cursor: pointer;
+  display: flex;
+}
+
+.category-bar-next:hover {
+  color: var(--anzhiyu-lighttext);
+}
+
 #category-bar #catalog-bar {
   margin-bottom: 0;
   overflow-y: hidden;
@@ -15398,6 +15658,12 @@ body[data-type="essay"] #web_bg {
 #bber > section > ul > li > div .bber-info-from {
   margin-left: 4px;
 }
+#bber > section > ul > li > div .bber-info-from i {
+  font-size: 0.7rem;
+}
+#bber .bber-item hr::before {
+  display: none;
+}
 
 #bber .bber-bottom {
   display: flex;
@@ -15426,6 +15692,7 @@ body[data-type="essay"] #web_bg {
 }
 #bber .bber-content-link i {
   margin-right: 3px;
+  font-size: 0.7rem;
 }
 #bber .bber-content-link:hover {
   background-color: var(--anzhiyu-main);
@@ -18036,7 +18303,7 @@ center#name-container {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    transition: 0.3s;
+    transition: all 0.3s, color 0s;
     position: absolute;
   }
 
@@ -18093,7 +18360,7 @@ a.extend.next {
   }
 }
 
-.layout > div:not(.recent-posts) #pagination .pagination > span,
+/* .layout > div:not(.recent-posts) #pagination .pagination > span,
 .layout > div:not(.recent-posts) #pagination .pagination > a {
   display: inline-block;
   margin: 0 6px;
@@ -18101,7 +18368,7 @@ a.extend.next {
   height: 2.5em;
   line-height: 2.5em;
   border-radius: 15px;
-}
+} */
 
 #pagination .pagination input {
   width: 2.5em;
@@ -18160,156 +18427,6 @@ b, strong {
   .reward #tube-con {
     display: none;
   }
-}
-
-/* 设置白色容器 */
-.reward #con {
-  width: 350px;
-  height: 85px;
-  position: relative;
-  border-radius: 4px;
-}
-/* 设置文本内容容器 */
-.reward #TA-con {
-  width: 157px;
-  height: 50px;
-  background-color: #f25d8e;
-  box-shadow: 0 4px 4px rgba(255, 112, 159, 0.3);
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  transform: translateY(-50%);
-  border-radius: 4px;
-  cursor: pointer;
-}
-/* 设置文本居中容器 */
-.reward #text-con {
-  width: 100px;
-  height: 100%;
-  margin: 0 auto;
-  position: relative;
-}
-/* 做一个小闪电 */
-.reward #linght {
-  width: 0;
-  height: 0;
-  position: absolute;
-  top: 36%;
-  left: 4px;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 10px;
-  border-top: 10px solid #fff;
-  border-radius: 4px;
-  transform: rotate(-55deg);
-}
-.reward #linght::after {
-  position: absolute;
-  top: -13px;
-  left: -11px;
-  content: "";
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 10px;
-  border-top: 10px solid #fff;
-  transform: rotate(180deg);
-  border-radius: 4px;
-}
-/* 文字 */
-.reward #TA {
-  float: right;
-  line-height: 50px;
-  font-size: 15px;
-  color: #fff;
-}
-.reward #TA-con:hover {
-  background-color: #ff6b9a;
-}
-
-/* 创建图形容器 */
-.reward #tube-con {
-  width: 157px;
-  height: 55px;
-  position: absolute;
-  right: -5px;
-  top: 15px;
-}
-/* 对svg图形设置宽高 */
-.reward svg {
-  width: 100%;
-  height: 100%;
-}
-/* 创建一个蒙版 宽度为0，当我hover充电框的时候，宽度展开 */
-.reward #mask {
-  width: 0px;
-  height: 100%;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: all 0.5s;
-}
-/* 对蒙版的sbg单独设置宽高，保证宽度高低有一个固定值而不是百分比 */
-.reward #mask svg {
-  width: 157px;
-  height: 55px;
-}
-/* 对充电框hover的时候开始动画，将粉色线条铺开 */
-.reward #TA-con:hover + #tube-con > #mask {
-  width: 157px;
-}
-/* 对充电框hover的时候开始动画，添加黄色快速移动的动画 */
-.reward #TA-con:hover + #tube-con > #orange-mask {
-  animation: move1 0.5s linear 0.2s infinite;
-}
-.reward #TA-con:hover + #tube-con > #orange-mask svg {
-  animation: movetwo 0.5s linear 0.2s infinite;
-}
-/* 创建黄色移动的蒙版 */
-.reward #orange-mask {
-  width: 18px;
-  height: 100%;
-  overflow: hidden;
-  position: absolute;
-  left: -15px;
-  top: 0px;
-}
-/* 创建黄色移动的内容 */
-.reward #orange-mask svg {
-  position: absolute;
-  top: 0;
-  left: 15px;
-  width: 157px;
-  height: 55px;
-}
-@keyframes move1 {
-  0% {
-    left: -15px;
-  }
-  100% {
-    left: 140px;
-  }
-}
-@keyframes movetwo {
-  0% {
-    left: 15px;
-  }
-  100% {
-    left: -140px;
-  }
-}
-.reward #people {
-  position: absolute;
-  right: 10px;
-  top: 4px;
-  font-size: 12px;
-  font-family: "雅黑";
-  color: #aaa;
-}
-.reward #people > b {
-  color: #777;
 }
 
 /* rightMenu右键菜单 */
@@ -21375,7 +21492,7 @@ div#runtime {
   border-radius: 30px;
 }
 #skills-tags-group-all .tags-group-icon img {
-  width: 60%;
+  width: 60px;
   margin: 0 auto !important;
 }
 #skills-tags-group-all .tags-group-icon-pair .tags-group-icon:nth-child(even) {
