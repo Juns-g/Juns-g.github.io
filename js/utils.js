@@ -63,7 +63,6 @@ const anzhiyu = {
     const bg = document.documentElement.getAttribute("data-theme") === "light" ? bgLight : bgDark;
     const root = document.querySelector(":root");
     root.style.setProperty("--anzhiyu-snackbar-time", duration + "ms");
-
     Snackbar.show({
       text: text,
       backgroundColor: bg,
@@ -278,7 +277,7 @@ const anzhiyu = {
       .replace('"', "")
       .replace('"', "");
     const currentTop = window.scrollY || document.documentElement.scrollTop;
-    if (currentTop > 56) {
+    if (currentTop > 26) {
       if (anzhiyu.is_Post()) {
         themeColor = getComputedStyle(document.documentElement)
           .getPropertyValue("--anzhiyu-meta-theme-post-color")
@@ -292,6 +291,26 @@ const anzhiyu = {
       if (themeColorMeta.getAttribute("content") === themeColor) return;
       this.changeThemeColor(themeColor);
     }
+  },
+  switchDarkMode: () => {
+    // Switch Between Light And Dark Mode
+    const nowMode = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    const rightMenu = document.getElementById("rightMenu");
+    if (nowMode === "light") {
+      activateDarkMode();
+      saveToLocal.set("theme", "dark", 2);
+      GLOBAL_CONFIG.Snackbar !== undefined && anzhiyu.snackbarShow(GLOBAL_CONFIG.Snackbar.day_to_night);
+      rightMenu.querySelector(".menu-darkmode-text").textContent = "浅色模式";
+    } else {
+      activateLightMode();
+      saveToLocal.set("theme", "light", 2);
+      GLOBAL_CONFIG.Snackbar !== undefined && anzhiyu.snackbarShow(GLOBAL_CONFIG.Snackbar.night_to_day);
+      rightMenu.querySelector(".menu-darkmode-text").textContent = "深色模式";
+    }
+    // handle some cases
+    typeof runMermaid === "function" && window.runMermaid();
+    rm && rm.hideRightMenu();
+    anzhiyu.darkModeStatus();
   },
   //是否是文章页
   is_Post: function () {
@@ -317,10 +336,6 @@ const anzhiyu = {
     scrollTop = bodyScrollTop - documentScrollTop > 0 ? bodyScrollTop : documentScrollTop;
 
     if (scrollTop != 0) {
-      pageHeaderEl.classList.add("nav-fixed");
-      pageHeaderEl.classList.add("nav-visible");
-    }
-    if (pageHeaderEl.querySelector(".bili-banner")) {
       pageHeaderEl.classList.add("nav-fixed");
       pageHeaderEl.classList.add("nav-visible");
     }
@@ -765,6 +780,11 @@ const anzhiyu = {
   hideTodayCard: function () {
     if (document.getElementById("todayCard")) {
       document.getElementById("todayCard").classList.add("hide");
+      const topGroup = document.querySelector(".topGroup");
+      const recentPostItems = topGroup.querySelectorAll(".recent-post-item");
+      recentPostItems.forEach(item => {
+        item.style.display = "flex";
+      });
     }
   },
 
@@ -1113,28 +1133,28 @@ const anzhiyu = {
     };
   },
   // CategoryBar滚动
-  scrollCategoryBarToRight: function() {
+  scrollCategoryBarToRight: function () {
     // 获取需要操作的元素
     const items = document.getElementById("catalog-list");
     const nextButton = document.getElementById("category-bar-next");
-  
+
     // 检查元素是否存在
     if (items && nextButton) {
       const itemsWidth = items.clientWidth;
-  
+
       // 判断是否已经滚动到最右侧
       if (items.scrollLeft + items.clientWidth + 1 >= items.scrollWidth) {
         // 滚动到初始位置并更新按钮内容
         items.scroll({
           left: 0,
-          behavior: "smooth"
+          behavior: "smooth",
         });
         nextButton.innerHTML = '<i class="anzhiyufont anzhiyu-icon-angle-double-right"></i>';
       } else {
         // 滚动到下一个视图
         items.scrollBy({
           left: itemsWidth,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       }
     } else {
