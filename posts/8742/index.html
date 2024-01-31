@@ -1,0 +1,525 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>回流与重绘 | Juns</title><meta name="keywords" content="前端,学习,HTML"><meta name="author" content="Juns,juns.g@foxmail.com"><meta name="copyright" content="Juns"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="回流与重绘"><meta name="application-name" content="回流与重绘"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="回流与重绘"><meta property="og:url" content="https://juns-g.github.io/posts/8742/index.html"><meta property="og:site_name" content="Juns"><meta property="og:description" content="回流与重绘 重绘(repaint)，回流也称为重排(reflow)  前言这是一道很经典的前端八股面试题了，不过实际开发也是有作用的 在做UI效果的时候一般考虑的就是俩个方面：  美观层面：布局样式好不好看 性能层面：浏览器渲染性能，会不会触发回流和重绘  这里就围绕其中的回流与重绘展开谈谈  什么"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/6k/wallhaven-6ke9eq.png?w=2560&amp;h=1440&amp;fmt=webp"><meta property="article:author" content="Juns"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/6k/wallhaven-6ke9eq.png?w=2560&amp;h=1440&amp;fmt=webp"><meta name="description" content="回流与重绘 重绘(repaint)，回流也称为重排(reflow)  前言这是一道很经典的前端八股面试题了，不过实际开发也是有作用的 在做UI效果的时候一般考虑的就是俩个方面：  美观层面：布局样式好不好看 性能层面：浏览器渲染性能，会不会触发回流和重绘  这里就围绕其中的回流与重绘展开谈谈  什么"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://juns-g.github.io/posts/8742/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: undefined,
+  postHeadAiDescription: undefined,
+  diytitle: {"enable":true,"leaveTitle":"w(ﾟДﾟ)w 不要走！再看看嘛！","backTitle":"♪(^∇^*)欢迎肥来！"},
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  music_page_default: "nav_music",
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: true,
+  mainTone: undefined,
+  authorStatus: {"skills":["🤖️ 数码科技爱好者","🔍 分享与热心帮助"]},
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: Juns","link":"链接: ","source":"来源: Juns","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: 'Juns',
+  title: '回流与重绘',
+  postAI: '',
+  pageFillDescription: '回流与重绘, 前言, 重绘, 重排, 影响范围, 如何优化, 样式集中改变, 将DOM离线, 脱离文档流, 在内存中操作DOM, 读写分离回流与重绘重绘回流也称为重排前言这是一道很经典的前端八股面试题了不过实际开发也是有作用的在做效果的时候一般考虑的就是俩个方面美观层面布局样式好不好看性能层面浏览器渲染性能会不会触发回流和重绘这里就围绕其中的回流与重绘展开谈谈什么是浏览器的回流重绘如何在实际项目中考虑他们产生的性能问题如何权衡他们重绘某些元素的外观改变所出发的浏览器行为不过没有改变布局把元素外观重新绘制出来的过程就叫重绘常见会引起重绘的属性重排某些元素的位置或尺寸发生了变化浏览器需要重新生成布局重新排列元素把元素放到争取的位置的过程叫重排回流就好比向河里文档流扔了一块石头变化激起涟漪然后引起周边水流受到波及所以也叫做回流通过概念对比也可以简单的发现重排一定导致重绘重排的成本大很多任何改变元素的尺寸位置的操作都会触发重排比如页面初始渲染这是开销最大的一次重排添加删除可见的元素改变元素位置改变元素尺寸比如边距填充边框宽度和高度等改变元素内容比如文字数量图片大小等改变元素字体大小改变浏览器窗口尺寸比如事件发生时激活伪类例如设置属性的值因为通过设置属性改变结点样式的话每一次设置都会触发一次查询某些属性或调用某些计算方法等除此之外当我们调用方法或者里的时也会触发重排原理是一样的都为求一个即时性和准确性影响范围全局范围比如下面这个如果节点发生了那么其他的都会受到影响都可能受到影响局部范围可以理解吧一个的宽高固定然后在这个内部发生就只会重新渲染他内部的元素如何优化核心目标减少重排次数减小重排范围样式集中改变将原本一行行添加样式的代码合并到一个类名中直接给元素添加类名我是导致重绘导致重绘导致重排重排会引起重绘上面这个代码会引起次重绘次重排可以通过添加类名的方式使他只有次重排我是将离线简单说就是先隐藏调样式再切换为显示我是第一次操作修改重绘重绘重排引起重绘第二次操作修改重排引起重绘重排引起重绘第三次操作修改重排引起重绘修改为我是第一次操作修改重排重绘不存在渲染树上不会引起重排重绘第二次操作修改第三次操作修改重排重绘这样就只有次重排了在切换显示隐藏的时候脱离文档流可以使用或来脱离文档流减少重排的范围我是我是其他重排重绘重排重绘可以在特定场景下把一些脱离文档流我是我是其他重排重绘重排仅当前元素重排仅当前元素在内存中操作这个就像是虚拟的理念了在中修改然后在一次性渲染成真实的我是号我后面还有号号号我是号我是号我是号每一次都会重排重绘这个会导致多次重排可以改为一次构建整个我是号我后面还有号号号我是号我是号我是号只会引起一次重排重绘读写分离浏览器会对重排做出优化比如这样的操作根据我们的知识来看应该是次重排重绘不过实际上只触发了最后一次重排这得益于浏览器的渲染队列机制当我们修改了元素的几何属性导致浏览器触发重排或重绘时它会把该操作放进渲染队列等到队列中的操作到了一定的数量或者到了一定的时间间隔时浏览器就会批量执行这些操作不过当我们读取某些信息的时候浏览器会立即执行渲染队列的任务这样就会在我们读取之前浏览器就立即执行重排重绘所以说我们可以把读写分离这样也可以优化我们也可以缓存布局信息强制刷新触发两次重排缓存布局信息相当于读写分离',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-31 12:22:31',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://i.ibb.co/56y2Ds6/2560.png"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/Juns-g" title="Github"><img class="back-menu-item-icon" src="/img/github.svg" alt="Github"/><span class="back-menu-item-text">Github</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">图床</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://www.superbed.cn/" title="图床"><img class="back-menu-item-icon" src="https://image.anzhiy.cn/favicon.ico" alt="图床"/><span class="back-menu-item-text">图床</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">Juns</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size: 0.9em;"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/CSS/" style="font-size: 1.05rem;">CSS<sup>1</sup></a><a href="/tags/Git/" style="font-size: 1.05rem;">Git<sup>1</sup></a><a href="/tags/HTML/" style="font-size: 1.05rem;">HTML<sup>2</sup></a><a href="/tags/JS/" style="font-size: 1.05rem;">JS<sup>8</sup></a><a href="/tags/MacBook-%E6%95%B0%E7%A0%81/" style="font-size: 1.05rem;">MacBook 数码<sup>1</sup></a><a href="/tags/React/" style="font-size: 1.05rem;">React<sup>1</sup></a><a href="/tags/TEDxTalks/" style="font-size: 1.05rem;">TEDxTalks<sup>4</sup></a><a href="/tags/TS/" style="font-size: 1.05rem;">TS<sup>1</sup></a><a href="/tags/Vue/" style="font-size: 1.05rem;">Vue<sup>6</sup></a><a href="/tags/%E4%B8%93%E6%B3%A8/" style="font-size: 1.05rem;">专注<sup>2</sup></a><a href="/tags/%E4%BF%A1%E5%BF%83/" style="font-size: 1.05rem;">信心<sup>1</sup></a><a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 1.05rem;">前端<sup>23</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 1.05rem;">学习<sup>19</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" style="font-size: 1.05rem;">学习路线<sup>1</sup></a><a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 1.05rem;">小程序<sup>1</sup></a><a href="/tags/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" style="font-size: 1.05rem;">年度总结<sup>1</sup></a><a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 1.05rem;">微前端<sup>1</sup></a><a href="/tags/%E6%80%BB%E7%BB%93/" style="font-size: 1.05rem;">总结<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 1.05rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 1.05rem;">浏览器<sup>1</sup></a><a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 1.05rem;">算法<sup>5</sup></a><a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 1.05rem;">计网<sup>1</sup></a><a href="/tags/%E9%9D%A2%E7%BB%8F/" style="font-size: 1.05rem;">面经<sup>10</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 1.05rem;">面试<sup>21</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">23</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">十二月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/05/"><span class="card-archive-list-date">五月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">25</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url">前端</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E5%89%8D%E7%AB%AF/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>前端</span></a><a class="article-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>学习</span></a><a class="article-meta__tags" href="/tags/HTML/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>HTML</span></a></span></div></div><h1 class="post-title" itemprop="name headline">回流与重绘</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2024-01-31T03:06:34.000Z" title="发表于 2024-01-31 11:06:34">2024-01-31</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-01-31T04:22:31.018Z" title="更新于 2024-01-31 12:22:31">2024-01-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">2.1k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="回流与重绘"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为河北"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>河北</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/6k/wallhaven-6ke9eq.png?w=2560&amp;h=1440&amp;fmt=webp"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://juns-g.github.io/posts/8742/"><header><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url">前端</a><a href="/tags/%E5%89%8D%E7%AB%AF/" tabindex="-1" itemprop="url">前端</a><a href="/tags/%E5%AD%A6%E4%B9%A0/" tabindex="-1" itemprop="url">学习</a><a href="/tags/HTML/" tabindex="-1" itemprop="url">HTML</a><h1 id="CrawlerTitle" itemprop="name headline">回流与重绘</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">Juns</span><time itemprop="dateCreated datePublished" datetime="2024-01-31T03:06:34.000Z" title="发表于 2024-01-31 11:06:34">2024-01-31</time><time itemprop="dateCreated datePublished" datetime="2024-01-31T04:22:31.018Z" title="更新于 2024-01-31 12:22:31">2024-01-31</time></header><h1 id="回流与重绘"><a href="#回流与重绘" class="headerlink" title="回流与重绘"></a>回流与重绘</h1><blockquote>
+<p>重绘(repaint)，回流也称为重排(reflow)</p>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是一道很经典的前端八股面试题了，不过实际开发也是有作用的</p>
+<p>在做UI效果的时候一般考虑的就是俩个方面：</p>
+<ul>
+<li>美观层面：布局样式好不好看</li>
+<li>性能层面：浏览器渲染性能，会不会触发回流和重绘</li>
+</ul>
+<p>这里就围绕其中的回流与重绘展开谈谈</p>
+<ul>
+<li>什么是浏览器的回流重绘？</li>
+<li>如何在实际项目中考虑他们产生的性能问题？</li>
+<li>如何权衡他们</li>
+</ul>
+<h2 id="重绘"><a href="#重绘" class="headerlink" title="重绘"></a>重绘</h2><p>某些元素的外观改变所出发的浏览器行为，不过没有改变布局，把元素外观重新绘制出来的过程就叫重绘</p>
+<p>常见会引起重绘的属性：</p>
+<table>
+<thead>
+<tr>
+<th>color</th>
+<th>border-style</th>
+<th align="left">visibility</th>
+<th>background</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>text-decoration</td>
+<td>background-image</td>
+<td align="left">background-position</td>
+<td>background-repeat</td>
+</tr>
+<tr>
+<td>outline-color</td>
+<td>outline</td>
+<td align="left">outline-style</td>
+<td>border-radius</td>
+</tr>
+<tr>
+<td>Outline-width</td>
+<td>box-shadow</td>
+<td align="left">background-size</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="重排"><a href="#重排" class="headerlink" title="重排"></a>重排</h2><p>某些元素的位置或尺寸发生了变化，浏览器需要重新生成布局，重新排列元素，把元素放到争取的位置的过程叫重排</p>
+<blockquote>
+<p>回流就好比向河里(文档流)扔了一块石头(dom变化)，激起涟漪，然后引起周边水流受到波及，所以也叫做回流</p>
+</blockquote>
+<p>通过概念对比也可以简单的发现，重排一定导致重绘，重排的成本大很多</p>
+<p>任何改变元素的尺寸&#x2F;位置的操作都会触发重排，比如：</p>
+<ul>
+<li>页面初始渲染，这是开销最大的一次重排;</li>
+<li>添加&#x2F;删除可见的DOM元素;</li>
+<li>改变元素位置;</li>
+<li>改变元素尺寸，比如边距、填充、边框、宽度和高度等;</li>
+<li>改变元素内容，比如文字数量，图片大小等;</li>
+<li>改变元素字体大小;</li>
+<li>改变浏览器窗口尺寸，比如resize事件发生时;</li>
+<li>激活CSS伪类（例如：:hover）;</li>
+<li>设置 style 属性的值，因为通过设置style属性改变结点样式的话，每一次设置都会触发一次reflow;</li>
+<li>查询某些属性或调用某些计算方法：offsetWidth、offsetHeight等，除此之外，当我们调用getComputedStyl方法，或者IE里的 currentStyle 时，也会触发重排，原理是一样的，都为求一个“即时性”和“准确性”;</li>
+</ul>
+<h3 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h3><p>全局范围，比如下面这个：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;hello&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h4</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">h4</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span>Name:<span class="tag">&lt;/<span class="name">strong</span>&gt;</span>juns<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h5</span>&gt;</span>male<span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ol</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span>coding<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span>loving<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ol</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果p节点发生了reflow，那么其他的都会受到影响，hello、body、h5、ol都可能受到影响</p>
+<p>局部范围：</p>
+<p>可以理解吧一个dom的宽高固定，然后在这个dom内部发生reflow，就只会重新渲染他内部的元素</p>
+<h2 id="如何优化"><a href="#如何优化" class="headerlink" title="如何优化"></a>如何优化</h2><p><strong>核心目标</strong>：减少重排次数，减小重排范围</p>
+<h3 id="样式集中改变"><a href="#样式集中改变" class="headerlink" title="样式集中改变"></a>样式集中改变</h3><p>将原本一行行添加样式的代码，合并到一个类名中，直接给元素添加类名</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span>我是demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> demo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;demo&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">color</span> = <span class="string">&#x27;red&#x27;</span> <span class="comment">// 导致重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">background</span> = <span class="string">&#x27;#ccc&#x27;</span> <span class="comment">// 导致重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">padding</span> = <span class="string">&#x27;15px 20px&#x27;</span> <span class="comment">// 导致重排（重排会引起重绘）</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面这个js代码会引起3次重绘，1次重排，可以通过添加类名的方式，使他只有1次重排</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span>我是demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> demo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;demo&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">className</span> = <span class="string">&#x27;demo&#x27;</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">  <span class="selector-class">.demo</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">color</span>: red;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">background</span>: <span class="number">#ccc</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">padding</span>: <span class="number">15px</span> <span class="number">20px</span>;</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="将DOM离线"><a href="#将DOM离线" class="headerlink" title="将DOM离线"></a>将DOM离线</h3><p>简单说就是先隐藏，调样式，再切换为显示</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span>我是demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 第一次操作修改 color、background、padding</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> demo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;demo&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">color</span> = <span class="string">&#x27;red&#x27;</span> <span class="comment">// 重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">background</span> = <span class="string">&#x27;#ccc&#x27;</span> <span class="comment">// 重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">padding</span> = <span class="string">&#x27;15px 20px&#x27;</span> <span class="comment">// 重排, 引起重绘</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 第二次操作修改 marginLeft、marginTop</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">marginLeft</span> = <span class="string">&#x27;15px&#x27;</span> <span class="comment">// 重排, 引起重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">marginTop</span> = <span class="string">&#x27;15px&#x27;</span> <span class="comment">// 重排, 引起重绘</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 第三次操作修改 border</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">border</span> = <span class="string">&#x27;2px solid red&#x27;</span> <span class="comment">// 重排, 引起重绘</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改为：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span>我是demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> demo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;demo&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 第一次操作修改 color、background、padding</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span> <span class="comment">// 重排, 重绘</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// DOM不存在渲染树上不会引起重排、重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">color</span> = <span class="string">&#x27;red&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">background</span> = <span class="string">&#x27;#ccc&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">padding</span> = <span class="string">&#x27;15px 20px&#x27;</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 第二次操作修改 marginLeft、marginTop</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">marginLeft</span> = <span class="string">&#x27;15px&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">marginTop</span> = <span class="string">&#x27;15px&#x27;</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 第三次操作修改 border</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">border</span> = <span class="string">&#x27;2px solid #ccc&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;block&#x27;</span> <span class="comment">// 重排, 重绘</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样就只有2次重排了，在切换显示隐藏的时候</p>
+<h3 id="脱离文档流"><a href="#脱离文档流" class="headerlink" title="脱离文档流"></a>脱离文档流</h3><p>可以使用absolute 或 fixed来脱离文档流，减少重排的范围</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span>我是demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;other&quot;</span>&gt;</span>我是其他<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> demo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;demo&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">padding</span> = <span class="string">&#x27;15px 20px&#x27;</span> <span class="comment">// 重排, 重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">height</span> = <span class="string">&#x27;60px&#x27;</span> <span class="comment">// 重排, 重绘</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以在特定场景下，把一些dom脱离文档流</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span>我是demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;other&quot;</span>&gt;</span>我是其他<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> renderEle = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;demo&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">position</span> = <span class="string">&#x27;fixed&#x27;</span> <span class="comment">// 重排, 重绘</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">padding</span> = <span class="string">&#x27;15px 20px&#x27;</span> <span class="comment">// 重排, 仅当前元素</span></span></span><br><span class="line"><span class="language-javascript">  demo.<span class="property">style</span>.<span class="property">height</span> = <span class="string">&#x27;60px&#x27;</span> <span class="comment">// 重排, 仅当前元素</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="在内存中操作DOM"><a href="#在内存中操作DOM" class="headerlink" title="在内存中操作DOM"></a>在内存中操作DOM</h3><p>这个就像是虚拟DOM的理念了，在js中修改DOM，然后在一次性渲染成真实的DOM</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;father&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>我是0号,我后面还有1号、2号、3号<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> father = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;father&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">let</span> arr = []</span></span><br><span class="line"><span class="language-javascript">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    arr = [<span class="string">&#x27;我是1号&#x27;</span>, <span class="string">&#x27;我是2号&#x27;</span>, <span class="string">&#x27;我是3号&#x27;</span>]</span></span><br><span class="line"><span class="language-javascript">    arr.<span class="title function_">forEach</span>(<span class="function"><span class="params">element</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> childNode = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;li&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">      childNode.<span class="property">innerText</span> = element</span></span><br><span class="line"><span class="language-javascript">      father.<span class="title function_">appendChild</span>(childNode) <span class="comment">// 每一次都会重排，重绘</span></span></span><br><span class="line"><span class="language-javascript">    &#125;)</span></span><br><span class="line"><span class="language-javascript">  &#125;, <span class="number">1000</span>)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个会导致多次重排，可以改为一次构建整个ul</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;demo&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;father&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>我是0号,我后面还有1号、2号、3号<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> demo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;demo&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">const</span> childUlNode = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;ul&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">let</span> arr = []</span></span><br><span class="line"><span class="language-javascript">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    arr = [<span class="string">&#x27;我是1号&#x27;</span>, <span class="string">&#x27;我是2号&#x27;</span>, <span class="string">&#x27;我是3号&#x27;</span>]</span></span><br><span class="line"><span class="language-javascript">    arr.<span class="title function_">forEach</span>(<span class="function"><span class="params">element</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> childLiNode = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;li&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">      childLiNode.<span class="property">innerText</span> = element</span></span><br><span class="line"><span class="language-javascript">      childUlNode.<span class="title function_">appendChild</span>(childLiNode)</span></span><br><span class="line"><span class="language-javascript">    &#125;)</span></span><br><span class="line"><span class="language-javascript">  &#125;, <span class="number">1000</span>)</span></span><br><span class="line"><span class="language-javascript">  demo.<span class="title function_">appendChild</span>(childUlNode) <span class="comment">// 只会引起一次重排，重绘</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h3><p>浏览器会对重排做出优化，比如这样的操作</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">div.<span class="property">style</span>.<span class="property">left</span> = <span class="string">&#x27;10px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">top</span> = <span class="string">&#x27;10px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">width</span> = <span class="string">&#x27;20px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">height</span> = <span class="string">&#x27;20px&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>根据我们的知识来看，应该是4次重排+重绘，不过实际上只触发了最后一次重排，这得益于浏览器的渲染队列机制。当我们修改了元素的几何属性，导致浏览器触发重排或重绘时。它会把该操作放进渲染队列，等到队列中的操作到了<strong>一定的数量或者到了一定的时间间隔</strong>时，浏览器就会批量执行这些操作。</p>
+<p>不过当我们读取某些信息的时候，浏览器会立即执行渲染队列的任务</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">div.<span class="property">style</span>.<span class="property">left</span> = <span class="string">&#x27;10px&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetLeft</span>);</span><br><span class="line">div.<span class="property">style</span>.<span class="property">top</span> = <span class="string">&#x27;10px&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetTop</span>);</span><br><span class="line">div.<span class="property">style</span>.<span class="property">width</span> = <span class="string">&#x27;20px&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetWidth</span>);</span><br><span class="line">div.<span class="property">style</span>.<span class="property">height</span> = <span class="string">&#x27;20px&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetHeight</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这样就会在我们读取之前，浏览器就立即执行重排+重绘，所以说我们可以把读写分离，这样也可以优化</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">div.<span class="property">style</span>.<span class="property">left</span> = <span class="string">&#x27;10px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">top</span> = <span class="string">&#x27;10px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">width</span> = <span class="string">&#x27;20px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">height</span> = <span class="string">&#x27;20px&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetLeft</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetTop</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetWidth</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(div.<span class="property">offsetHeight</span>);</span><br></pre></td></tr></table></figure>
+
+<p>我们也可以缓存布局信息：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// bad 强制刷新 触发两次重排</span></span><br><span class="line">div.<span class="property">style</span>.<span class="property">left</span> = div.<span class="property">offsetLeft</span> + <span class="number">1</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">top</span> = div.<span class="property">offsetTop</span> + <span class="number">1</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// good 缓存布局信息 相当于读写分离</span></span><br><span class="line"><span class="keyword">var</span> curLeft = div.<span class="property">offsetLeft</span>;</span><br><span class="line"><span class="keyword">var</span> curTop = div.<span class="property">offsetTop</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">left</span> = curLeft + <span class="number">1</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">div.<span class="property">style</span>.<span class="property">top</span> = curTop + <span class="number">1</span> + <span class="string">&#x27;px&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://i.ibb.co/56y2Ds6/2560.png" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://i.ibb.co/56y2Ds6/2560.png" title="头像" alt="头像"></a><div class="post-copyright__author_name">Juns</div><div class="post-copyright__author_desc"></div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://juns-g.github.io/posts/8742/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://juns-g.github.io/posts/8742/')">回流与重绘</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://juns-g.github.io/posts/8742/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=回流与重绘&amp;url=https://juns-g.github.io/posts/8742/&amp;pic=https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/6k/wallhaven-6ke9eq.png?w=2560&amp;h=1440&amp;fmt=webp" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://juns-g.github.io" target="_blank">Juns</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E5%89%8D%E7%AB%AF/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>前端<span class="tagsPageCount">23</span></a><a class="post-meta__box__tags" href="/tags/%E5%AD%A6%E4%B9%A0/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>学习<span class="tagsPageCount">19</span></a><a class="post-meta__box__tags" href="/tags/HTML/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>HTML<span class="tagsPageCount">2</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/6k/wallhaven-6ke9eq.png?w=2560&amp;h=1440&amp;fmt=webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/posts/30706/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.doowebs.es/wp-content/uploads/2016/08/javascript-1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Map、Set与Symbol</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/posts/6635/" title="HTML面试知识点"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1676594038305-c0e855ca2d96?ixid=M3w0MjI2NjN8MHwxfHRvcGljfHxxUFlzRHp2Sk9ZY3x8fHx8Mnx8MTY4NDI5MjM2MHw&ixlib=rb-4.0.3&w=2560&h=1440&fmt=webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-05-09</div><div class="title">HTML面试知识点</div></div></a></div><div><a href="/posts/45055/" title="React学习笔记.md"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://jslib.dev/wp-content/uploads/2022/03/Reactlogo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-12-23</div><div class="title">React学习笔记.md</div></div></a></div><div><a href="/posts/27571/" title="2023-4-23 快手本地生活 一面 寄"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://picx.zhimg.com/v2-355f5f4f5a7b957ea4525f8cc5547f6f_1440w.jpg?source=172ae18b" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-05-18</div><div class="title">2023-4-23 快手本地生活 一面 寄</div></div></a></div><div><a href="/posts/34913/" title="2023-5-13 零禅智能一面准备"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/ex/wallhaven-ex9jzr.jpg?w=2560&h=1440&fmt=webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-05-13</div><div class="title">2023-5-13 零禅智能一面准备</div></div></a></div><div><a href="/posts/30980/" title="2023-5-13 零禅智能 一面 过"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/j5/wallhaven-j5rdly.jpg?w=2560&h=1440&fmt=webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-05-18</div><div class="title">2023-5-13 零禅智能 一面 过</div></div></a></div><div><a href="/posts/19485/" title="2023-5-13 零禅智能 二面 过"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/j5/wallhaven-j5rdly.jpg?w=2560&h=1440&fmt=webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-05-18</div><div class="title">2023-5-13 零禅智能 二面 过</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://i.ibb.co/56y2Ds6/2560.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/08/24/64e6ce9c507bb.png" alt="status"/></div></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">设计、开发、科技</b>相关的问题和看法，还有<b style="color:#fff">日常生活</b>和<b style="color:#fff">分享</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">Juns</h1><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/Juns-g" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a><a class="social-icon faa-parent animated-hover" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=juns.g@foxmail.com" target="_blank" title="Email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E6%B5%81%E4%B8%8E%E9%87%8D%E7%BB%98"><span class="toc-number">1.</span> <span class="toc-text">回流与重绘</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E7%BB%98"><span class="toc-number">1.2.</span> <span class="toc-text">重绘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%8E%92"><span class="toc-number">1.3.</span> <span class="toc-text">重排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">1.3.1.</span> <span class="toc-text">影响范围</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96"><span class="toc-number">1.4.</span> <span class="toc-text">如何优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B7%E5%BC%8F%E9%9B%86%E4%B8%AD%E6%94%B9%E5%8F%98"><span class="toc-number">1.4.1.</span> <span class="toc-text">样式集中改变</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86DOM%E7%A6%BB%E7%BA%BF"><span class="toc-number">1.4.2.</span> <span class="toc-text">将DOM离线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%B1%E7%A6%BB%E6%96%87%E6%A1%A3%E6%B5%81"><span class="toc-number">1.4.3.</span> <span class="toc-text">脱离文档流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E6%93%8D%E4%BD%9CDOM"><span class="toc-number">1.4.4.</span> <span class="toc-text">在内存中操作DOM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="toc-number">1.4.5.</span> <span class="toc-text">读写分离</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/8742/" title="回流与重绘"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/6k/wallhaven-6ke9eq.png?w=2560&amp;h=1440&amp;fmt=webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="回流与重绘"/></a><div class="content"><a class="title" href="/posts/8742/" title="回流与重绘">回流与重绘</a><time datetime="2024-01-31T03:06:34.000Z" title="发表于 2024-01-31 11:06:34">2024-01-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/30706/" title="Map、Set与Symbol"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.doowebs.es/wp-content/uploads/2016/08/javascript-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Map、Set与Symbol"/></a><div class="content"><a class="title" href="/posts/30706/" title="Map、Set与Symbol">Map、Set与Symbol</a><time datetime="2024-01-30T06:21:34.000Z" title="发表于 2024-01-30 14:21:34">2024-01-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/39661/" title="Git常用操作"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://pic.imgdb.cn/item/65b3e898871b83018a342092.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Git常用操作"/></a><div class="content"><a class="title" href="/posts/39661/" title="Git常用操作">Git常用操作</a><time datetime="2024-01-26T10:51:44.000Z" title="发表于 2024-01-26 18:51:44">2024-01-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/65354/" title="面试梳理"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://pic.imgdb.cn/item/65b3e897871b83018a341f45.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="面试梳理"/></a><div class="content"><a class="title" href="/posts/65354/" title="面试梳理">面试梳理</a><time datetime="2024-01-26T06:20:26.000Z" title="发表于 2024-01-26 14:20:26">2024-01-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1583/" title="JS数据类型判断"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.doowebs.es/wp-content/uploads/2016/08/javascript-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JS数据类型判断"/></a><div class="content"><a class="title" href="/posts/1583/" title="JS数据类型判断">JS数据类型判断</a><time datetime="2024-01-25T07:46:49.000Z" title="发表于 2024-01-25 15:46:49">2024-01-25</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="footer_deal"><a class="deal_link" href="mailto:juns.g@foxmail.com" title="email"><i class="anzhiyufont anzhiyufont anzhiyu-icon-envelope"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://weibo.com/" title="微博"><i class="anzhiyufont anzhiyufont anzhiyu-icon-weibo"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://www.facebook.com/" title="facebook"><i class="anzhiyufont anzhiyufont anzhiyu-icon-envelope"></i></a><img class="footer_mini_logo" title="返回顶部" alt="返回顶部" onclick="anzhiyu.scrollToDest(0, 500)" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://i.ibb.co/56y2Ds6/2560.png" size="50px"/><a class="deal_link" target="_blank" rel="noopener" href="https://github.com/Juns-g" title="Github"><i class="anzhiyufont anzhiyufont anzhiyu-icon-github"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://space.bilibili.com/" title="Bilibili"><i class="anzhiyufont anzhiyufont anzhiyu-icon-bilibili"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://v.douyin.com/" title="抖音"><i class="anzhiyufont anzhiyufont anzhiyu-icon-envelope"></i></a></div><div id="workboard"><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 - 2024 By <a class="footer-bar-link" href="/" title="Juns" target="_blank">Juns</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">8</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/Juns-g" title="Github"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/github.svg" alt="Github"/><span class="back-menu-item-text">Github</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">图床</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://www.superbed.cn/" title="图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://image.anzhiy.cn/favicon.ico" alt="图床"/><span class="back-menu-item-text">图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size: 0.9em;"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/CSS/" style="font-size: 0.88rem;">CSS<sup>1</sup></a><a href="/tags/Git/" style="font-size: 0.88rem;">Git<sup>1</sup></a><a href="/tags/HTML/" style="font-size: 0.88rem;">HTML<sup>2</sup></a><a href="/tags/JS/" style="font-size: 0.88rem;">JS<sup>8</sup></a><a href="/tags/MacBook-%E6%95%B0%E7%A0%81/" style="font-size: 0.88rem;">MacBook 数码<sup>1</sup></a><a href="/tags/React/" style="font-size: 0.88rem;">React<sup>1</sup></a><a href="/tags/TEDxTalks/" style="font-size: 0.88rem;">TEDxTalks<sup>4</sup></a><a href="/tags/TS/" style="font-size: 0.88rem;">TS<sup>1</sup></a><a href="/tags/Vue/" style="font-size: 0.88rem;">Vue<sup>6</sup></a><a href="/tags/%E4%B8%93%E6%B3%A8/" style="font-size: 0.88rem;">专注<sup>2</sup></a><a href="/tags/%E4%BF%A1%E5%BF%83/" style="font-size: 0.88rem;">信心<sup>1</sup></a><a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 0.88rem; font-weight: 500; color: var(--anzhiyu-lighttext)">前端<sup>23</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 0.88rem;">学习<sup>19</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" style="font-size: 0.88rem;">学习路线<sup>1</sup></a><a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 0.88rem;">小程序<sup>1</sup></a><a href="/tags/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" style="font-size: 0.88rem;">年度总结<sup>1</sup></a><a href="/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" style="font-size: 0.88rem;">微前端<sup>1</sup></a><a href="/tags/%E6%80%BB%E7%BB%93/" style="font-size: 0.88rem;">总结<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 0.88rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 0.88rem;">浏览器<sup>1</sup></a><a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 0.88rem;">算法<sup>5</sup></a><a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 0.88rem;">计网<sup>1</sup></a><a href="/tags/%E9%9D%A2%E7%BB%8F/" style="font-size: 0.88rem;">面经<sup>10</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 0.88rem;">面试<sup>21</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="6912905522" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random" volume="0.7"></meting-js></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://music.163.com/#/playlist?id=6912905522&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("05/09/2023 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2023 By 安知鱼 V1.6.12",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 Juns 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("05/09/2023 00:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "";
+        img.title = "";
+        img.alt = "";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><div class="js-pjax"><input type="hidden" name="page-type" id="page-type" value="post"></div><script async data-pjax src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.1/bubble/bubble.js"></script><script>var visitorMail = "visitor@juns.com";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
