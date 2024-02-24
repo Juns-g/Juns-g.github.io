@@ -23892,12 +23892,12 @@ div#swiper_container:hover {
 }
 .topGroup .todayCard::after {
   position: absolute;
-  content: "";
+  content: '';
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  box-shadow: 0 -109px 133px -9px #000000 inset;
+  box-shadow: 0 -29px 109px -53px #000000 inset;
 }
 
 .topGroup .todayCard.hide {
